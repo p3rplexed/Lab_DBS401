@@ -185,30 +185,13 @@ class product
 
     public function getProductbyId($id)
     {
-        global $conn;
-        connectDB();
-
-        if (is_numeric($id)) {
-    
-            $query = "SELECT * FROM products where id = ? AND status = 1";
-    
-            // use prepared statement to prevent SQL injection
-            $preparedStatement = $conn->prepare($query);
-            $preparedStatement->bind_param('i', $id);
-            $preparedStatement->execute();
-            $result = $preparedStatement->get_result();
-    
-            if (mysqli_num_rows($result) <= 0) {
-                return false;
-            } else {
-                //lưu tên đăng nhập
-                $result = $result->fetch_assoc();
-                return $result;
-            }
-        } else {
-            http_response_code(400);
-            die('Error processing bad or malformed request');
+        $query = "SELECT * FROM products where id = '$id' AND status = 1";
+        $mysqli_result = select($query);
+        if ($mysqli_result) {
+            $result = mysqli_fetch_all(select($query), MYSQLI_ASSOC)[0];
+            return $result;
         }
+        return false;
     }
 
     public function block($id)
