@@ -15,21 +15,45 @@ use PHPMailer\PHPMailer\PHPMailer;
 class user
 {
 
-
 	public function login($email, $password)
 	{
-		$query = "SELECT * FROM users WHERE email = '$email' AND password = '$password' LIMIT 1 ";
-		$result = select($query);
-		if ($result) {
-			$value = $result->fetch_assoc();
-			Session::set('user', true);
-			Session::set('userId', $value['id']);
-			Session::set('role_id', $value['role_id']);
-			header("Location:index.php");
-		} else {
-			$alert = "Tên đăng nhập hoặc mật khẩu không đúng!";
-			return $alert;
+		global $conn;
+  		connectDB();
+		 //check enter password and username
+		if (!$email || !$password) {
+			$message_error = "Please enter the full login email and password!";
+			echo "<script type='text/javascript'>alert('$message_error');</script>";
+			exit;
 		}
+	
+		$regex1 = preg_match('/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$/', $email);
+		$regex2 = preg_match('/[\'"^£$%&*()}{@#~?><>,|=_+¬-]/', $password);
+		if ($regex1 && !$regex2) {
+	
+			$query = "SELECT * FROM users WHERE email = ? and password = ?";
+	
+			// use prepared statement to prevent SQL injection
+			$preparedStatement = $conn->prepare($query);
+			$preparedStatement->bind_param('ss', $email, $password);
+			$preparedStatement->execute();
+			$result = $preparedStatement->get_result();
+	
+			if (mysqli_num_rows($result) <= 0) {
+				$message = "Incorrect email or password!";
+				echo "<script type='text/javascript'>alert('$message');</script>";
+			} else {
+				//lưu tên đăng nhập
+				$row = $result->fetch_assoc();
+				Session::set('user', true);
+				Session::set('userId', $value['id']);
+				Session::set('role_id', $value['role_id']);
+				header("Location:index.php");
+			}
+		} else {
+			http_response_code(400);
+			die('Error processing bad or malformed request');
+		}
+			
 	}
 
 	public function insert($data)
