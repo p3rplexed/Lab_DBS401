@@ -199,11 +199,11 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `email`, `fullname`, `dob`, `password`, `role_id`, `status`, `address`, `isConfirmed`, `captcha`) VALUES
-(1, 'admin@gmail.com', 'Administrator', '2021-11-01', 'admin123', 1, 1, '', 1, ''),
+(1, 'admin@gmail.com', 'Administrator', '2021-11-01', 'kobrutefroce', 1, 1, '', 1, ''),
 (2, 'gianght@gmail.com', 'Ha Tuan Giang', '2021-11-01', 'giang0310', 1, 1, 'VinhPhuc', 1, '12345'),
-(3, 'mainnh@gmail.com', 'Nguyen Ngoc Hien Mai', '2021-11-01', 'mai6869', 1, 1, '', 1, ''),
-(4, 'namdl@gmail.com', 'Do Le Nam', '2021-11-01', 'nam6869', 1, 1, '', 1, ''),
-(31, 'ducnt@gmail.com', 'Nguyen Trung Duc', '2021-12-06', 'duc6869', 2, 1, 'CanTho', 1, '56661');
+(3, 'mainnh@gmail.com', 'Nguyen Ngoc Hien Mai', '2021-11-01', 'hmai6869', 1, 1, '', 1, ''),
+(4, 'namdl@gmail.com', 'Do Le Nam', '2021-11-01', 'lnam6869', 1, 1, '', 1, ''),
+(31, 'ducnt@gmail.com', 'Nguyen Trung Duc', '2021-12-06', 'tduc6869', 2, 1, 'CanTho', 1, '56661');
 
 --
 -- Indexes for dumped tables
