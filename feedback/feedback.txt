@@ -1,0 +1,7 @@
+Hà Giang
+Sản phẩm đóng gói kỹ,đúng như mô tả
+image:uploads/image1.jpg
+
+Tommy Shelby
+Chất lượng sản phẩm tuyệt vời
+image:uploads/image2.jpg
