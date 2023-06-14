@@ -75,6 +75,9 @@ if (!$result) {
             <div class="add-cart-single">
                 <a href="add_cart.php?id=<?= $result['id'] ?>">Thêm vào giỏ</a>
             </div>
+            <div class="add-feedback">
+                <a href="feedback.php">FeedBack</a>
+            </div>
         </div>
     </div>
     </div>
