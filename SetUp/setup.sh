@@ -38,6 +38,7 @@ if ! dpkg -l | grep -q mysql-server; then
     echo "MySQL đã được cài đặt thành công."
 else
     echo "MySQL đã được cài đặt trên hệ thống."
+    sudo service mysql start
 fi
 
 # Kiểm tra xem Git đã được cài đặt hay chưa
@@ -95,14 +96,19 @@ database_name="DBS401"
 # Kiểm tra xem cơ sở dữ liệu đã tồn tại hay chưa
 if mysql -u"root" -e "use $database_name;" &> /dev/null; then
     echo "Cơ sở dữ liệu $database_name đã tồn tại."
-
-    # Tạo người dùng và cấp quyền trên cơ sở dữ liệu
-    sudo mysql -e "CREATE USER '$mysql_user'@'localhost' IDENTIFIED BY '$mysql_password';"
-    sudo mysql -e "GRANT ALL PRIVILEGES ON $database_name.* TO '$mysql_user'@'localhost';"
-    sudo mysql -e "FLUSH PRIVILEGES;"
     
-    echo "insert data to database...."
-    mysql -u "$mysql_user" -p"$mysql_password" DBS401 < "$web_root/$web_folder/sql/instrumentstore.sql" 
+   # Kiểm tra xem người dùng đã tồn tại hay chưa
+   if mysql -u"root" -e "SELECT User FROM mysql.user WHERE User='$mysql_user';" | grep -q "$mysql_user"; then
+   	 echo "Người dùng $mysql_user đã tồn tại trong MySQL."
+   else
+   	 # Tạo người dùng và cấp quyền trên cơ sở dữ liệu
+   	 echo "Người dùng $mysql_user chưa tồn tại trong MySQL. Đang tạo người dùng mới..." 
+	 sudo mysql -e "CREATE USER '$mysql_user'@'localhost' IDENTIFIED BY '$mysql_password';"
+   	 sudo mysql -e "GRANT ALL PRIVILEGES ON $database_name.* TO '$mysql_user'@'localhost';"
+    	 sudo mysql -e "FLUSH PRIVILEGES;"
+   fi 
+   echo "insert data to database...."
+   mysql -u "$mysql_user" -p"$mysql_password" DBS401 < "$web_root/$web_folder/sql/instrumentstore.sql" 
 else
     echo "Cơ sở dữ liệu $database_name chưa tồn tại. Tiến hành tạo cơ sở dữ liệu..."
 
@@ -112,11 +118,15 @@ else
     # Kiểm tra xem cơ sở dữ liệu đã được tạo thành công hay không
     if [ $? -eq 0 ]; then
         echo "Cơ sở dữ liệu $database_name đã được tạo thành công."
-
-	# Tạo người dùng và cấp quyền trên cơ sở dữ liệu
-	sudo mysql -e "CREATE USER '$mysql_user'@'localhost' IDENTIFIED BY '$mysql_password';"
-	sudo mysql -e "GRANT ALL PRIVILEGES ON $database_name.* TO '$mysql_user'@'localhost';"
-	sudo mysql -e "FLUSH PRIVILEGES;"
+    if mysql -u"root" -e "SELECT User FROM mysql.user WHERE User='$mysql_user';" | grep -q "$mysql_user"; then
+         echo "Người dùng $mysql_user đã tồn tại trong MySQL."
+    else  
+         # Tạo người dùng và cấp quyền trên cơ sở dữ liệu
+         echo "Người dùng $mysql_user chưa tồn tại trong MySQL. Đang tạo người dùng mới..." 
+         sudo mysql -e "CREATE USER '$mysql_user'@'localhost' IDENTIFIED BY '$mysql_password';"
+         sudo mysql -e "GRANT ALL PRIVILEGES ON $database_name.* TO '$mysql_user'@'localhost';"
+         sudo mysql -e "FLUSH PRIVILEGES;"
+    fi
 	
 	echo "insert data to database...."
         mysql -u "$mysql_user" -p"$mysql_password" DBS401 < "$web_root/$web_folder/sql/instrumentstore.sql" 
