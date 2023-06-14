@@ -94,18 +94,19 @@ mysql_password="123456"
 database_name="DBS401"
 
 # Kiểm tra xem cơ sở dữ liệu đã tồn tại hay chưa
-if mysql -u"root" -e "use $database_name;" &> /dev/null; then
+echo "Mật khẩu mặc định của mysql sẽ là rỗng,nên không cần nhập  mk và ấn enter.Nếu trước đó bạn đã đặt mk cho mysql thì hãy nhập mk rồi enter"
+if mysql -u"root" -p -e "use $database_name;" &> /dev/null; then
     echo "Cơ sở dữ liệu $database_name đã tồn tại."
     
    # Kiểm tra xem người dùng đã tồn tại hay chưa
-   if mysql -u"root" -e "SELECT User FROM mysql.user WHERE User='$mysql_user';" | grep -q "$mysql_user"; then
+   if mysql -u"root" -p -e "SELECT User FROM mysql.user WHERE User='$mysql_user';" | grep -q "$mysql_user"; then
    	 echo "Người dùng $mysql_user đã tồn tại trong MySQL."
    else
    	 # Tạo người dùng và cấp quyền trên cơ sở dữ liệu
    	 echo "Người dùng $mysql_user chưa tồn tại trong MySQL. Đang tạo người dùng mới..." 
-	 sudo mysql -e "CREATE USER '$mysql_user'@'localhost' IDENTIFIED BY '$mysql_password';"
-   	 sudo mysql -e "GRANT ALL PRIVILEGES ON $database_name.* TO '$mysql_user'@'localhost';"
-    	 sudo mysql -e "FLUSH PRIVILEGES;"
+	 sudo mysql -u"root" -p -e "CREATE USER '$mysql_user'@'localhost' IDENTIFIED BY '$mysql_password';"
+   	 sudo mysql -u"root" -p -e "GRANT ALL PRIVILEGES ON $database_name.* TO '$mysql_user'@'localhost';"
+    	 sudo mysql -u"root" -p -e "FLUSH PRIVILEGES;"
    fi 
    echo "insert data to database...."
    mysql -u "$mysql_user" -p"$mysql_password" DBS401 < "$web_root/$web_folder/sql/instrumentstore.sql" 
@@ -113,19 +114,19 @@ else
     echo "Cơ sở dữ liệu $database_name chưa tồn tại. Tiến hành tạo cơ sở dữ liệu..."
 
     # Tạo cơ sở dữ liệu
-    mysql -u"root" -e "CREATE DATABASE $database_name;"
+    mysql -u"root" -p -e "CREATE DATABASE $database_name;"
 
     # Kiểm tra xem cơ sở dữ liệu đã được tạo thành công hay không
     if [ $? -eq 0 ]; then
         echo "Cơ sở dữ liệu $database_name đã được tạo thành công."
-    if mysql -u"root" -e "SELECT User FROM mysql.user WHERE User='$mysql_user';" | grep -q "$mysql_user"; then
+    if mysql -u"root" -p -e "SELECT User FROM mysql.user WHERE User='$mysql_user';" | grep -q "$mysql_user"; then
          echo "Người dùng $mysql_user đã tồn tại trong MySQL."
     else  
          # Tạo người dùng và cấp quyền trên cơ sở dữ liệu
          echo "Người dùng $mysql_user chưa tồn tại trong MySQL. Đang tạo người dùng mới..." 
-         sudo mysql -e "CREATE USER '$mysql_user'@'localhost' IDENTIFIED BY '$mysql_password';"
-         sudo mysql -e "GRANT ALL PRIVILEGES ON $database_name.* TO '$mysql_user'@'localhost';"
-         sudo mysql -e "FLUSH PRIVILEGES;"
+         sudo mysql -u"root" -p -e "CREATE USER '$mysql_user'@'localhost' IDENTIFIED BY '$mysql_password';"
+         sudo mysql -u"root" -p -e "GRANT ALL PRIVILEGES ON $database_name.* TO '$mysql_user'@'localhost';"
+         sudo mysql -u"root" -p -e "FLUSH PRIVILEGES;"
     fi
 	
 	echo "insert data to database...."
