@@ -164,4 +164,5 @@ else
 fi
 
 # Đường dẫn tới trang web
+chmod -R 757 /var/www/html/DBS401
 echo "Truy cập đường dẫn sau để tới trang web của bạn:http://localhost/DBS401"
