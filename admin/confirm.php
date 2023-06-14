@@ -1,15 +1,11 @@
 <?php
-include 'classes/product.php';
-include_once 'classes/cart.php';
-
-$cart = new cart();
-$totalQty = $cart->getTotalQtyByUserId();
-
-$product = new product();
-$result = $product->getProductbyId($_GET['id']);
-if (!$result) {
-    echo 'Không tìm thấy sản phẩm!';
-    die();
+include 'classes/user.php';
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $user = new user();
+    $result = $user->confirm($_POST['userId'], $_POST['captcha']);
+    if ($result === true) {
+        echo '<script type="text/javascript">alert("Xác minh tài khoản thành công!"); window.location.href = "login.php";</script>';
+    }
 }
 ?>
 
@@ -24,7 +20,7 @@ if (!$result) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <script src="https://use.fontawesome.com/2145adbb48.js"></script>
     <script src="https://kit.fontawesome.com/a42aeb5b72.js" crossorigin="anonymous"></script>
-    <title><?= $result['name'] ?></title>
+    <title>Xác minh Email</title>
 </head>
 
 <body>
@@ -33,14 +29,14 @@ if (!$result) {
         <ul>
             <li><a href="index.php">Trang chủ</a></li>
             <li><a href="productList.php">Sản phẩm</a></li>
-            <li><a href="register.php" id="signup">Đăng ký</a></li>
+            <li><a href="register.php" id="signup" class="active">Đăng ký</a></li>
             <li><a href="login.php" id="signin">Đăng nhập</a></li>
             <li><a href="order.php" id="order">Đơn hàng</a></li>
             <li>
                 <a href="checkout.php">
                     <i class="fa fa-shopping-bag"></i>
                     <span class="sumItem">
-                        <?= ($totalQty['total']) ? $totalQty['total'] : "0" ?>
+                        0
                     </span>
                 </a>
             </li>
@@ -48,36 +44,17 @@ if (!$result) {
     </nav>
     <section class="banner"></section>
     <div class="featuredProducts">
-        <h1>Sản phẩm</h1>
+        <h1>Xác minh Email</h1>
     </div>
     <div class="container-single">
-        <div class="image-product">
-            <img src="admin/uploads/<?= $result['image'] ?>" alt="">
-        </div>
-        <div class="info">
-            <div class="name">
-                <h2><?= $result['name'] ?></h2>
-            </div>
-            <div class="price-single">
-                Giá bán: <b><?= number_format($result['promotionPrice'], 0, '', ',') ?>VND</b>
-            </div>
-            <?php
-            if ($result['promotionPrice'] < $result['originalPrice']) { ?>
-                <div>
-                    Gía gốc: <del><?= number_format($result['originalPrice'], 0, '', ',') ?>VND</del>
-                </div>
-            <?php }
-            ?>
-            <div class="des">
-                <p>Đã bán: <?= $result['soldCount'] ?></p>
-                <?= $result['des'] ?>
-            </div>
-            <div class="add-cart-single">
-                <a href="add_cart.php?id=<?= $result['id'] ?>">Thêm vào giỏ</a>
-            </div>
-            <div class="add-feedback">
-                <a href="feedback.php">FeedBack</a>
-            </div>
+        <div class="login">
+            <b class="error"><?= !empty($result) ? $result : '' ?></b>
+            <form action="confirm.php" method="post" class="form-login">
+                <label for="fullName">Mã xác minh</label>
+                <input type="text" id="userId" name="userId" hidden style="display: none;" value="<?= (isset($_GET['id'])) ? $_GET['id'] : $_POST['userId'] ?>">
+                <input type="text" id="captcha" name="captcha" placeholder="Mã xác minh...">
+                <input type="submit" value="Xác minh" name="submit">
+            </form>
         </div>
     </div>
     </div>
