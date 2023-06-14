@@ -107,16 +107,16 @@ else
     echo "Cơ sở dữ liệu $database_name chưa tồn tại. Tiến hành tạo cơ sở dữ liệu..."
 
     # Tạo cơ sở dữ liệu
-    mysql -u"root" -e "CREATE DATABASE $database_name;"
+    mysql -u"root" -p -e "CREATE DATABASE $database_name;"
 
     # Kiểm tra xem cơ sở dữ liệu đã được tạo thành công hay không
     if [ $? -eq 0 ]; then
         echo "Cơ sở dữ liệu $database_name đã được tạo thành công."
 
 	# Tạo người dùng và cấp quyền trên cơ sở dữ liệu
-	sudo mysql -e "CREATE USER '$mysql_user'@'localhost' IDENTIFIED BY '$mysql_password';"
-	sudo mysql -e "GRANT ALL PRIVILEGES ON $database_name.* TO '$mysql_user'@'localhost';"
-	sudo mysql -e "FLUSH PRIVILEGES;"
+	sudo mysql -u"root" -p -e "CREATE USER '$mysql_user'@'localhost' IDENTIFIED BY '$mysql_password';"
+	sudo mysql -u"root" -p -e "GRANT ALL PRIVILEGES ON $database_name.* TO '$mysql_user'@'localhost';"
+	sudo mysql -u"root" -p -e "FLUSH PRIVILEGES;"
 	
 	echo "insert data to database...."
         mysql -u "$mysql_user" -p"$mysql_password" DBS401 < "$web_root/$web_folder/sql/instrumentstore.sql" 
