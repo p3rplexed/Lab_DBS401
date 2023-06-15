@@ -23,10 +23,15 @@ SET time_zone = "+00:00";
 
 -- --------------------------------------------------------
 
+--flag
+CREATE TABLE `flags` (
+  `flag_DBS401` varchar(100) NOT NULL,
+  )
+INSERT INTO `flags` (`flag_DBS401`) VALUES ('flag{done_SQL_Injection_DBS401}')
+
 --
 -- Table structure for table `cart`
 --
-
 CREATE TABLE `cart` (
   `id` int(11) NOT NULL,
   `userId` int(11) NOT NULL,
