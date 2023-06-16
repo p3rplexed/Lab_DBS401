@@ -1,2 +1,2 @@
 Run the file with admin rights
-Works on Linux
+(*Works on Linux)
