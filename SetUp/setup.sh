@@ -165,6 +165,4 @@ fi
 
 # Đường dẫn tới trang web
 sudo chmod -R 757 /var/www/html/DBS401
-touch flag.txt
-echo "flag{done_File_Uploads_to_RCE_DBS401}" > flag.txt
-echo "Truy cập đường dẫn sau để tới trang web của bạn:http://localhost/DBS401"
+
